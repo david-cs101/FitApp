@@ -220,7 +220,8 @@
     .meal-when { font-size: 11px; color: var(--text2); margin-top: 2px; }
     .meal-macros { margin-left: auto; text-align: right; font-size: 11px; color: var(--text2); white-space: nowrap; }
     .meal-macros b { display: block; font-size: 14px; color: var(--text); }
-    .meal-body { padding: 0 16px 14px; }
+    .meal-body { padding: 0 16px 14px; display: none; }
+    .meal.open .meal-body { display: block; }
     .meal-opt { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin-top: 8px; }
     .meal-opt-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--accent); margin-bottom: 5px; }
     .meal-opt ul { list-style: none; font-size: 13px; line-height: 1.6; }
@@ -921,8 +922,158 @@ function applyKcal(delta) {
 }
 
 // ─── FOOD VIEW ────────────────────────────────────────────────────────
+// Lean-bulk targets for David (35 y, 1.74 m, desk job, 2-3 gym days + 2 golf practice days).
+// Base derived on 2026-09-23 at 68 kg: ~2,900 kcal · 150 g protein · 85 g fat · rest carbs.
+const KCAL_PER_KG = 2900 / 68;
+const PROT_PER_KG = 2.2, FAT_PER_KG = 1.25;
+const MACRO_COLORS = { p: '#7c6ffc', f: '#c47f26', c: '#2fa8a0' }; // validated for CVD on the dark surface
+
+const MEALS = [
+  { ico:'🍳', name:'Desayuno', when:'Al levantarte', kcal:650, prot:35, options:[
+    { lbl:'Opción A · Huevos', items:['3 huevos + 2 claras revueltos','70 g pan integral','½ aguacate','1 fruta (papaya, piña, naranja…)'] },
+    { lbl:'Opción B · Avena rápida', items:['80 g avena + 300 ml leche','1 scoop de proteína (o 200 g yogur griego)','1 plátano + 15 g crema de cacahuete'] },
+    { lbl:'Opción C · Salado', items:['80 g pan integral','100 g pavo o jamón + 60 g queso fresco','1 fruta'] },
+  ]},
+  { ico:'🥣', name:'Media mañana', when:'10:30 – 11:30', kcal:400, prot:25, options:[
+    { lbl:'Opción A', items:['200 g yogur griego natural','30 g frutos secos','1 cucharadita de miel'] },
+    { lbl:'Opción B', items:['250 g queso fresco batido','1 fruta + 20 g nueces'] },
+    { lbl:'Opción C · Para llevar al golf', items:['Bocadillo pequeño (60 g pan) de pavo o atún','1 plátano'] },
+  ]},
+  { ico:'🍗', name:'Comida', when:'13:30 – 15:00', kcal:850, prot:45, options:[
+    { lbl:'Base del plato', items:['180 g pollo o pavo a la plancha','120 g arroz (en crudo) · o 300 g patata · o 120 g pasta','Verdura: calabacín, champiñón, judía verde, zanahoria o brócoli','1 cucharada de aceite de oliva'] },
+    { lbl:'Cambia la proteína', items:['160 g ternera magra o 170 g lomo de cerdo','2 latas de atún al natural','Día de legumbre: 100 g lentejas/frijoles (en seco) + 100 g pollo'] },
+    { lbl:'Cambia el carbohidrato (Panamá)', items:['300 g yuca cocida','1 plátano maduro al horno (no frito)','120 g arroz + 150 g frijoles cocidos'] },
+  ]},
+  { ico:'⚡', name:'Pre / post entreno', when:'1 h antes o justo después', kcal:250, prot:25, options:[
+    { lbl:'Opción A', items:['Batido: 1 scoop de proteína con agua o leche','1 plátano'] },
+    { lbl:'Opción B · Sin batido', items:['1 tostada con 100 g queso fresco batido + miel','1 fruta'] },
+  ]},
+  { ico:'🐟', name:'Cena', when:'2 h antes de dormir', kcal:700, prot:35, options:[
+    { lbl:'Base del plato', items:['150 g salmón, corvina o merluza','300 g boniato o patata asada','Ensalada de lechuga, pepino y zanahoria + aceite de oliva'] },
+    { lbl:'Alternativas', items:['Tortilla de 3 huevos + 300 g patata + ensalada','Wrap integral de pollo (150 g) con guacamole y lechuga','Si cenas merluza o corvina (pescado blanco), añade 10 g más de aceite o ½ aguacate'] },
+  ]},
+];
+
+const SUPPLEMENTS = [
+  { tag:'yes', tagTxt:'Sí', name:'Creatina monohidrato · 3-5 g/día', txt:'Todos los días, entrenes o no, a cualquier hora. Sin fase de carga ni descansos. Más fuerza, más músculo y mejor recuperación (también para la pierna izquierda).' },
+  { tag:'rec', tagTxt:'Recomendable', name:'Proteína en polvo (whey o vegetal)', txt:'1-2 scoops al día solo para llegar al objetivo de proteína cuando la comida no alcanza. Es comida práctica, no magia.' },
+  { tag:'opt', tagTxt:'Opcional', name:'Omega-3 y vitamina D', txt:'Omega-3 para articulaciones y tendones; vitamina D si pasas la mayor parte del día dentro. Una analítica te dirá si de verdad hace falta la D.' },
+  { tag:'no', tagTxt:'No', name:'BCAA, quemadores, pre-entrenos', txt:'La proteína ya aporta los BCAA; los quemadores van contra tu objetivo. Un café antes de entrenar hace el mismo papel que un pre-entreno.' },
+];
+
+const HABITS = [
+  ['💧', '<b>2,5-3 L de agua al día</b>, y +0,5-1 L los días de golf: con el calor de Panamá sudas mucho. Si sudas en exceso, añade una pizca de sal o una bebida con electrolitos.'],
+  ['🥩', '<b>Reparte la proteína</b> en 4-5 tomas de 30-40 g. Rinde más que meterla toda en la cena.'],
+  ['🍚', '<b>Carbohidratos alrededor del entreno</b>: la comida anterior y la siguiente al gym son las que más arroz/patata/pan deben llevar.'],
+  ['😴', '<b>7-8 h de sueño</b>. El músculo se construye descansando; sin sueño el superávit se va a grasa.'],
+  ['⚖️', '<b>Pésate 3-4 mañanas por semana</b> en la pestaña Peso. Con la media semanal ajusto las calorías, no con el dato de un día.'],
+  ['🔁', '<b>Regla del 80/20</b>: si el 80% de la semana sigues el plan, una comida libre no rompe nada.'],
+];
+
+function nutritionTargets() {
+  const weeks = weeklyAverages();
+  const refKg = weeks.length ? weeks[weeks.length-1].avg : (bodyLog.length ? bodyLog[bodyLog.length-1].kg : 68);
+  const base = Math.round(refKg * KCAL_PER_KG / 50) * 50;
+  const kcal = base + nutrition.kcalOffset;
+  const p = Math.round(refKg * PROT_PER_KG), f = Math.round(refKg * FAT_PER_KG);
+  const c = Math.max(0, Math.round((kcal - p*4 - f*9) / 4));
+  return { refKg, base, kcal, p, f, c };
+}
+
+function adjustKcal(delta) {
+  nutrition.kcalOffset += delta;
+  saveData();
+  render();
+}
+
+function toggleMeal(i) {
+  document.getElementById(`meal-${i}`).classList.toggle('open');
+}
+
 function renderFood() {
-  document.getElementById('content').innerHTML = `<div class="hist-empty">Plan de alimentación en preparación 🍽️</div>`;
+  const t = nutritionTargets();
+  const kP = t.p*4, kF = t.f*9, kC = t.c*4, kT = kP + kF + kC;
+  const pct = k => (k / kT * 100).toFixed(1);
+  const mealsKcal = MEALS.reduce((n, m) => n + m.kcal, 0);
+  const diff = t.kcal - mealsKcal;
+  const scaleNote = Math.abs(diff) >= 100
+    ? `<p class="bw-hint">El menú está pensado para ~${mealsKcal.toLocaleString('es-ES')} kcal. Tu objetivo actual es ${diff > 0 ? diff + ' kcal más' : -diff + ' kcal menos'}: ${diff > 0 ? 'añade' : 'quita'} ≈ ${Math.round(Math.abs(diff) / 150 * 40)} g de arroz crudo (o su equivalente en patata/pan) repartidos entre comida y cena.</p>`
+    : '';
+
+  const meals = MEALS.map((m, i) => `
+    <div class="meal" id="meal-${i}">
+      <div class="meal-head" onclick="toggleMeal(${i})">
+        <span class="meal-ico">${m.ico}</span>
+        <div><div class="meal-name">${m.name}</div><div class="meal-when">${m.when}</div></div>
+        <div class="meal-macros"><b>~${m.kcal} kcal</b>${m.prot} g prot</div>
+      </div>
+      <div class="meal-body">
+        ${m.options.map(o => `<div class="meal-opt"><div class="meal-opt-lbl">${o.lbl}</div><ul>${o.items.map(it => `<li>${it}</li>`).join('')}</ul></div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  const supps = SUPPLEMENTS.map(s => `
+    <div class="supp">
+      <span class="supp-tag ${s.tag}">${s.tagTxt}</span>
+      <div><div class="supp-name">${s.name}</div><div class="supp-txt">${s.txt}</div></div>
+    </div>`).join('');
+
+  document.getElementById('content').innerHTML = `
+    <div class="hist-intro">
+      <h2>Alimentación · David</h2>
+      <p>Volumen limpio: ganar músculo con el mínimo de grasa. Objetivos calculados con tu peso medio de <b>${fmtKg(t.refKg)} kg</b>; se recalculan solos cuando registras en ⚖️ Peso.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Objetivo diario</div>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-lbl">Calorías</div><div class="stat-val">${t.kcal.toLocaleString('es-ES')}</div><div class="stat-sub">kcal/día</div></div>
+        <div class="stat"><div class="stat-lbl">Proteína</div><div class="stat-val">${t.p} g</div><div class="stat-sub">${PROT_PER_KG.toString().replace('.', ',')} g/kg</div></div>
+        <div class="stat"><div class="stat-lbl">Grasas</div><div class="stat-val">${t.f} g</div><div class="stat-sub">aceite, aguacate, frutos secos</div></div>
+        <div class="stat"><div class="stat-lbl">Carbohidratos</div><div class="stat-val">${t.c} g</div><div class="stat-sub">arroz, patata, avena, fruta</div></div>
+      </div>
+      <div class="macro-bar" role="img" aria-label="Reparto de calorías: proteína ${Math.round(pct(kP))}%, grasas ${Math.round(pct(kF))}%, carbohidratos ${Math.round(pct(kC))}%">
+        <div style="width:${pct(kP)}%;background:${MACRO_COLORS.p}"></div>
+        <div style="width:${pct(kF)}%;background:${MACRO_COLORS.f}"></div>
+        <div style="width:${pct(kC)}%;background:${MACRO_COLORS.c}"></div>
+      </div>
+      <div class="macro-legend">
+        <span><i style="background:${MACRO_COLORS.p}"></i>Proteína ${Math.round(pct(kP))}%</span>
+        <span><i style="background:${MACRO_COLORS.f}"></i>Grasas ${Math.round(pct(kF))}%</span>
+        <span><i style="background:${MACRO_COLORS.c}"></i>Carbohidratos ${Math.round(pct(kC))}%</span>
+      </div>
+      <div class="kcal-adj">
+        <span>Ajuste sobre la base (${t.base.toLocaleString('es-ES')} kcal): <b style="color:var(--text)">${nutrition.kcalOffset > 0 ? '+' : ''}${nutrition.kcalOffset} kcal</b></span>
+        <button onclick="adjustKcal(-50)" aria-label="Restar 50 kcal">−50</button>
+        <button onclick="adjustKcal(50)" aria-label="Sumar 50 kcal">+50</button>
+      </div>
+      ${scaleNote}
+    </div>
+
+    <div class="card coach">
+      <div class="coach-head">🧑‍🏫 Cómo usar este plan</div>
+      <p>Elige <b>una opción de cada comida</b>; son intercambiables entre sí, así no te aburres. Los días de gym o golf no cambian las cantidades: el gasto extra ya está contado. Lo que sí cambia: pon el <b>pre/post entreno</b> pegado al entrenamiento.</p>
+      <p>Cada semana miro tu media en ⚖️ Peso y te digo si subimos o bajamos calorías.</p>
+    </div>
+
+    <div class="sec-head"><span>🍽️</span><span class="sec-name">Menú del día · toca para ver opciones</span><div class="sec-line"></div></div>
+    ${meals}
+
+    <div class="card">
+      <div class="card-title">Suplementos</div>
+      ${supps}
+    </div>
+
+    <div class="card">
+      <div class="card-title">Hábitos que marcan la diferencia</div>
+      <ul class="rules">${HABITS.map(([i, txt]) => `<li><span>${i}</span><span>${txt}</span></li>`).join('')}</ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Fuera del menú</div>
+      <p class="avoid">Sin tomate ni pimiento, como pediste. Si hay otra verdura que no te guste, dímelo y la cambio.</p>
+    </div>
+  `;
 }
 
 // ─── RENDER ───────────────────────────────────────────────────────────

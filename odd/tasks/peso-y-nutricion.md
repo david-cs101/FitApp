@@ -16,8 +16,8 @@ David is on a lean-bulk plan agreed in a previous session (2026-09-23): ~2,900 k
 - Route: direct inline (one non-trivial file, already understood). TDD: off (no test runner in project); checks = manual render in browser.
 
 ## Tasks
-- [ ] T1 — Header navigation (Plan / Histórico / Peso / Comida) + Peso view (log, SVG trend chart, weekly averages, coach adjustment hint)
-- [ ] T2 — Comida view (targets, meal plan with swaps, supplements, rules) + SW cache bump
+- [x] T1 — Header navigation (Plan / Histórico / Peso / Comida) + Peso view (log, SVG trend chart, weekly averages, coach adjustment hint)
+- [x] T2 — Comida view (targets, meal plan with swaps, supplements, rules) + SW cache bump
 
 ## Acceptance criteria
 - Peso: add/replace today's weight, delete entries, chart renders with ≥2 entries, weekly average and weekly delta shown, recommendation follows rules: <+0.1 kg/week for 2 weeks → +150–200 kcal; >+0.5 kg/week → −150 kcal.
@@ -25,4 +25,9 @@ David is on a lean-bulk plan agreed in a previous session (2026-09-23): ~2,900 k
 - Existing plan and history views keep working; data persists after reload.
 
 ## Progress / evidence
-- (pending)
+- T1 (route: inline) — commit 76212c4. Browser check at 375px: save/replace same-day entry, coach branches (empty, in-range, stalled 2 weeks → +150 with one-adjustment-per-week guard), chart + weekly table render, plan view unaffected, no JS errors. RDD assess: medium, under_budget (pending in slice).
+- T2 (route: inline) — Comida view. Base targets at 68 kg = 2,900 kcal / 150 P / 85 F / 384 C. Menu rebalanced to ~2,850 kcal (previous chat plan summed only ~2,700). No tomato/pepper in menu (checked). Macro bar palette validated (dataviz validator, dark surface). SW cache → fitplan-v4.
+
+## Next step
+- Push branch / merge to main (user decision) so GitHub Pages serves the new version.
+- Ask David which other vegetables he dislikes and adapt the menu.

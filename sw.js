@@ -1,4 +1,4 @@
-const CACHE = 'fitplan-v3';
+const CACHE = 'fitplan-v4';
 const FILES = ['./', './index.html', './manifest.json', './icon.png'];
 
 self.addEventListener('install', e => {
