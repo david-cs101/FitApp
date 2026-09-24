@@ -551,8 +551,9 @@ async function loadData() {
       const d = await r.json();
       completed = d.fit_done    || {};
       weights   = d.fit_weights || {};
-      bodyLog   = d.fit_body    || [];
-      nutrition = { kcalOffset: 0, ...(d.fit_nutrition || {}) };
+      // Older data.json files predate these keys: fall back to the local copy instead of wiping it
+      bodyLog   = d.fit_body      || JSON.parse(localStorage.getItem('fit_body') || '[]');
+      nutrition = { kcalOffset: 0, ...(d.fit_nutrition || JSON.parse(localStorage.getItem('fit_nutrition') || '{}')) };
       migrateData();
       return;
     }
@@ -723,7 +724,12 @@ function bulkAdvice(weeks) {
   const off = nutrition.kcalOffset;
   const offTxt = off ? ` Ajuste actual: <b>${off > 0 ? '+' : ''}${off} kcal</b> sobre la base.` : '';
   const applied = nutrition.lastAdjustWeek === currentWeekKey;
-  const btn = (delta) => applied
+  const lastWk = weeks[weeks.length-1];
+  // One or two weigh-ins are too noisy to act on: only offer the adjustment once the week has 3+
+  const partialWeek = !!lastWk && lastWk.week === currentWeekKey && lastWk.n < 3;
+  const btn = (delta) => partialWeek
+    ? `<p class="avoid">Cuando tengas 3 pesajes esta semana podrás aplicar el ajuste.</p>`
+    : applied
     ? `<p class="avoid">Ya aplicaste un ajuste esta semana. Espera a ver la media de la próxima antes de volver a tocar.</p>`
     : `<p><button class="btn-save" onclick="applyKcal(${delta})">Aplicar ${delta > 0 ? '+' : ''}${delta} kcal a mi plan</button></p>`;
 

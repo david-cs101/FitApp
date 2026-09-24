@@ -27,6 +27,7 @@ David is on a lean-bulk plan agreed in a previous session (2026-09-23): ~2,900 k
 ## Progress / evidence
 - T1 (route: inline) — commit 76212c4. Browser check at 375px: save/replace same-day entry, coach branches (empty, in-range, stalled 2 weeks → +150 with one-adjustment-per-week guard), chart + weekly table render, plan view unaffected, no JS errors. RDD assess: medium, under_budget (pending in slice).
 - T2 (route: inline) — Comida view. Base targets at 68 kg = 2,900 kcal / 150 P / 85 F / 384 C. Menu rebalanced to ~2,850 kcal (previous chat plan summed only ~2,700). No tomato/pepper in menu (checked). Macro bar palette validated (dataviz validator, dark surface). SW cache → fitplan-v4.
+- Review (RDD, medium, 547 lines, consent granted): lens review-reliability → approved, acknowledged (lineage review-deb0886625973a80, authority burned). Advisory warnings fixed in follow-up commit: kcal adjustment only offered with ≥3 weigh-ins in the current week; loadData falls back to localStorage when data.json lacks fit_body/fit_nutrition. Advisory not addressed: no automated tests (project has no test runner).
 
 ## Next step
 - Push branch / merge to main (user decision) so GitHub Pages serves the new version.
