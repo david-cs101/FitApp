@@ -158,7 +158,85 @@
     .history-btn { font-family: inherit; cursor: pointer; transition: all .15s; white-space: nowrap; }
     .history-btn:hover { background: var(--bg4); }
     .history-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(124,111,252,.12); }
-    .day-tab.dim { opacity: .35; pointer-events: none; }
+    .day-tab.dim { opacity: .35; }
+    .view-nav { display: flex; gap: 8px; padding: 0 20px 8px; overflow-x: auto; scrollbar-width: none; }
+    .view-nav::-webkit-scrollbar { display: none; }
+    .view-nav .history-btn { flex: 1; padding: 7px 10px; font-size: 12px; }
+
+    /* SHARED CARDS (PESO / COMIDA) */
+    .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+    .card-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text2); margin-bottom: 12px; }
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+    .stat { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
+    .stat-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: .6px; color: var(--text2); margin-bottom: 4px; }
+    .stat-val { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+    .stat-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+    .coach { border-left: 3px solid var(--accent); background: linear-gradient(90deg,rgba(124,111,252,.12),var(--bg2) 60%); }
+    .coach p { font-size: 13px; line-height: 1.55; }
+    .coach p + p { margin-top: 8px; }
+    .coach .coach-head { font-size: 14px; font-weight: 800; margin-bottom: 6px; }
+
+    /* PESO */
+    .bw-form { display: flex; gap: 8px; flex-wrap: wrap; }
+    .bw-form input { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 9px 10px; color: var(--text); font-size: 14px; font-weight: 600; font-family: inherit; min-width: 0; }
+    .bw-form input:focus { outline: none; border-color: var(--green); }
+    .bw-form .in-kg { width: 90px; }
+    .bw-form .in-date { width: 150px; color-scheme: dark; }
+    .bw-form .in-note { flex: 1; min-width: 120px; font-weight: 400; }
+    .bw-hint { font-size: 11px; color: var(--text2); margin-top: 8px; }
+    .chart-wrap { position: relative; }
+    .chart-wrap svg { width: 100%; height: auto; display: block; touch-action: pan-y; }
+    .chart-legend { display: flex; gap: 14px; font-size: 11px; color: var(--text2); margin-bottom: 8px; }
+    .chart-legend span { display: flex; align-items: center; gap: 6px; }
+    .lg-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text2); }
+    .lg-line { width: 16px; height: 2px; border-radius: 2px; background: var(--accent); }
+    .chart-tip { position: absolute; pointer-events: none; background: var(--bg4); border: 1px solid var(--border); border-radius: 8px; padding: 6px 9px; font-size: 12px; white-space: nowrap; transform: translate(-50%, -110%); display: none; }
+    .chart-tip b { color: var(--text); }
+    .bw-list { display: flex; flex-direction: column; }
+    .bw-item { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .bw-item:last-child { border-bottom: none; }
+    .bw-item .bw-d { color: var(--text2); width: 92px; flex-shrink: 0; }
+    .bw-item .bw-kg { font-weight: 700; }
+    .bw-item .bw-n { color: var(--text2); font-size: 12px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bw-del { background: transparent; border: none; color: var(--text2); font-size: 14px; cursor: pointer; padding: 2px 6px; margin-left: auto; }
+    .bw-del:hover { color: var(--red); }
+    .wk-row { display: flex; justify-content: space-between; font-size: 13px; padding: 7px 0; border-bottom: 1px solid var(--border); }
+    .wk-row:last-child { border-bottom: none; }
+    .wk-row .wk-d { font-weight: 600; }
+    .up { color: var(--green); } .down { color: var(--orange); } .flat { color: var(--text2); }
+
+    /* COMIDA */
+    .macro-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; gap: 2px; margin: 12px 0 8px; }
+    .macro-bar div { height: 100%; }
+    .macro-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11px; color: var(--text2); }
+    .macro-legend span { display: flex; align-items: center; gap: 5px; }
+    .macro-legend i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+    .kcal-adj { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 12px; color: var(--text2); flex-wrap: wrap; }
+    .kcal-adj button { background: var(--bg3); border: 1px solid var(--border); color: var(--text); border-radius: 7px; padding: 4px 10px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
+    .meal { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 12px; overflow: hidden; }
+    .meal-head { display: flex; align-items: center; gap: 10px; padding: 14px 16px; cursor: pointer; }
+    .meal-ico { font-size: 22px; }
+    .meal-name { font-size: 15px; font-weight: 700; }
+    .meal-when { font-size: 11px; color: var(--text2); margin-top: 2px; }
+    .meal-macros { margin-left: auto; text-align: right; font-size: 11px; color: var(--text2); white-space: nowrap; }
+    .meal-macros b { display: block; font-size: 14px; color: var(--text); }
+    .meal-body { padding: 0 16px 14px; }
+    .meal-opt { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin-top: 8px; }
+    .meal-opt-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--accent); margin-bottom: 5px; }
+    .meal-opt ul { list-style: none; font-size: 13px; line-height: 1.6; }
+    .meal-opt li::before { content: "• "; color: var(--text2); }
+    .supp { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .supp:last-child { border-bottom: none; }
+    .supp-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; padding: 3px 7px; border-radius: 6px; height: fit-content; white-space: nowrap; }
+    .supp-tag.yes { color: var(--green); background: rgba(61,214,140,.12); }
+    .supp-tag.rec { color: var(--blue); background: rgba(61,168,252,.12); }
+    .supp-tag.opt { color: var(--yellow); background: rgba(252,210,61,.1); }
+    .supp-tag.no { color: var(--text2); background: var(--bg3); }
+    .supp-name { font-size: 13px; font-weight: 700; }
+    .supp-txt { font-size: 12px; color: var(--text2); line-height: 1.5; margin-top: 2px; }
+    .rules { list-style: none; display: flex; flex-direction: column; gap: 9px; font-size: 13px; line-height: 1.5; }
+    .rules li { display: flex; gap: 10px; }
+    .avoid { font-size: 12px; color: var(--text2); line-height: 1.5; }
 
     .hist-intro { margin-bottom: 20px; }
     .hist-intro h2 { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
@@ -187,9 +265,13 @@
       <div class="app-sub">David &amp; Muri · FGF Golf Fitness</div>
     </div>
     <div class="header-actions">
-      <button class="header-badge history-btn" id="historyBtn" onclick="openHistory()">📅 Histórico</button>
       <div class="header-badge" id="todayBadge">Hoy</div>
     </div>
+  </div>
+  <div class="view-nav">
+    <button class="header-badge history-btn" data-view="history" onclick="setView('history')">📅 Histórico</button>
+    <button class="header-badge history-btn" data-view="body" onclick="setView('body')">⚖️ Peso</button>
+    <button class="header-badge history-btn" data-view="food" onclick="setView('food')">🍽️ Comida</button>
   </div>
   <div class="day-tabs" id="dayTabs"></div>
 </div>
@@ -447,7 +529,9 @@ function fmtWeekRange(weekKey) {
 let completed = {};       // { [weekKey]: { "dayIdx-exIdx": true } }
 let weights   = {};       // { [exName]: [{kg,reps,note,date,week}] }
 let currentWeekKey = getWeekKey(new Date());
-let currentView = 'plan'; // 'plan' | 'history'
+let bodyLog   = [];       // [{date:'YYYY-MM-DD', kg, note}] sorted by date
+let nutrition = { kcalOffset: 0 }; // manual calorie adjustment on top of the base target
+let currentView = 'plan'; // 'plan' | 'history' | 'body' | 'food'
 
 function isDone(key) { return !!(completed[currentWeekKey] && completed[currentWeekKey][key]); }
 
@@ -466,6 +550,8 @@ async function loadData() {
       const d = await r.json();
       completed = d.fit_done    || {};
       weights   = d.fit_weights || {};
+      bodyLog   = d.fit_body    || [];
+      nutrition = { kcalOffset: 0, ...(d.fit_nutrition || {}) };
       migrateData();
       return;
     }
@@ -473,17 +559,21 @@ async function loadData() {
   // fallback: localStorage
   completed = JSON.parse(localStorage.getItem('fit_done')    || '{}');
   weights   = JSON.parse(localStorage.getItem('fit_weights') || '{}');
+  bodyLog   = JSON.parse(localStorage.getItem('fit_body')    || '[]');
+  nutrition = { kcalOffset: 0, ...JSON.parse(localStorage.getItem('fit_nutrition') || '{}') };
   migrateData();
 }
 
 async function saveData() {
-  localStorage.setItem('fit_done',    JSON.stringify(completed));
-  localStorage.setItem('fit_weights', JSON.stringify(weights));
+  localStorage.setItem('fit_done',      JSON.stringify(completed));
+  localStorage.setItem('fit_weights',   JSON.stringify(weights));
+  localStorage.setItem('fit_body',      JSON.stringify(bodyLog));
+  localStorage.setItem('fit_nutrition', JSON.stringify(nutrition));
   try {
     await fetch('/api/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fit_done: completed, fit_weights: weights })
+      body: JSON.stringify({ fit_done: completed, fit_weights: weights, fit_body: bodyLog, fit_nutrition: nutrition })
     });
   } catch(e) {}
 }
@@ -515,17 +605,19 @@ function selectTab(idx) {
 
 // ─── VIEW SWITCH ────────────────────────────────────────────────────
 function render() {
-  const btn = document.getElementById('historyBtn');
-  btn.textContent = currentView === 'history' ? '← Volver' : '📅 Histórico';
-  btn.classList.toggle('active', currentView === 'history');
-  document.querySelectorAll('.day-tab').forEach(t => t.classList.toggle('dim', currentView === 'history'));
+  document.querySelectorAll('.view-nav .history-btn').forEach(b => b.classList.toggle('active', b.dataset.view === currentView));
+  document.querySelectorAll('.day-tab').forEach(t => t.classList.toggle('dim', currentView !== 'plan'));
   if (currentView === 'history') renderHistory();
+  else if (currentView === 'body') renderBody();
+  else if (currentView === 'food') renderFood();
   else renderDay();
 }
 
-function openHistory() {
-  currentView = currentView === 'history' ? 'plan' : 'history';
+// Tapping the active view button (or any day tab) returns to the training plan
+function setView(view) {
+  currentView = currentView === view ? 'plan' : view;
   render();
+  window.scrollTo(0, 0);
 }
 
 // ─── HISTORY VIEW ───────────────────────────────────────────────────
@@ -586,6 +678,251 @@ function renderHistory() {
   });
 
   document.getElementById('content').innerHTML = html;
+}
+
+// ─── BODY WEIGHT VIEW ─────────────────────────────────────────────────
+// Lean-bulk pacing: aim for +0.1…+0.5 kg/week on the weekly average (daily weigh-ins are noisy)
+const BULK_MIN = 0.1, BULK_MAX = 0.5;
+const DAY_MS = 86400000;
+let bwPts = []; // chart points for the hover tooltip
+const BW_W = 360, BW_H = 200; // chart viewBox sized for phone width so labels stay legible
+
+function dateKey(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function fmtDay(iso) {
+  return parseLocalDate(iso).toLocaleDateString('es-ES', { day:'2-digit', month:'short' });
+}
+function fmtKg(v, sign) {
+  const s = v.toFixed(1).replace('.', ',');
+  return sign && v > 0 ? '+' + s : s;
+}
+function trendCls(v) { return v > 0.05 ? 'up' : v < -0.05 ? 'down' : 'flat'; }
+
+function weeklyAverages() {
+  const byWeek = {};
+  bodyLog.forEach(e => {
+    const wk = getWeekKey(parseLocalDate(e.date));
+    (byWeek[wk] = byWeek[wk] || []).push(e.kg);
+  });
+  const weeks = Object.keys(byWeek).sort().map(wk => ({
+    week: wk, n: byWeek[wk].length,
+    avg: byWeek[wk].reduce((a,b) => a+b, 0) / byWeek[wk].length
+  }));
+  // kg/week vs the previous week with data (normalised when weeks are skipped)
+  weeks.forEach((w, i) => {
+    if (i === 0) { w.rate = null; return; }
+    const gapWeeks = Math.round((parseLocalDate(w.week) - parseLocalDate(weeks[i-1].week)) / (7*DAY_MS)) || 1;
+    w.rate = (w.avg - weeks[i-1].avg) / gapWeeks;
+  });
+  return weeks;
+}
+
+function bulkAdvice(weeks) {
+  const off = nutrition.kcalOffset;
+  const offTxt = off ? ` Ajuste actual: <b>${off > 0 ? '+' : ''}${off} kcal</b> sobre la base.` : '';
+  const applied = nutrition.lastAdjustWeek === currentWeekKey;
+  const btn = (delta) => applied
+    ? `<p class="avoid">Ya aplicaste un ajuste esta semana. Espera a ver la media de la próxima antes de volver a tocar.</p>`
+    : `<p><button class="btn-save" onclick="applyKcal(${delta})">Aplicar ${delta > 0 ? '+' : ''}${delta} kcal a mi plan</button></p>`;
+
+  if (weeks.length === 0) return {
+    head: 'Empecemos por medir 📏',
+    body: `<p>Pésate <b>3-4 mañanas por semana</b>, en ayunas, después de ir al baño y con la misma ropa. Yo me fijo en la <b>media semanal</b>, no en el dato de un día: el peso diario baila ±1 kg por agua y sal.</p>`
+  };
+  if (weeks.length === 1) return {
+    head: 'Primera semana en marcha',
+    body: `<p>Llevas ${weeks[0].n} registro${weeks[0].n > 1 ? 's' : ''}. Necesito al menos <b>2 semanas</b> de medias para decirte si ajustamos calorías. Sigue con el plan de 🍽️ Comida tal cual.${offTxt}</p>`
+  };
+
+  const last = weeks[weeks.length-1], prev = weeks[weeks.length-2];
+  const partial = last.week === currentWeekKey && last.n < 3
+    ? `<p class="avoid">Ojo: la semana actual solo tiene ${last.n} registro${last.n > 1 ? 's' : ''}, el dato es provisional.</p>` : '';
+  const r = last.rate;
+  const rateTxt = `Tu media pasó de <b>${fmtKg(prev.avg)}</b> a <b>${fmtKg(last.avg)} kg</b> (${fmtKg(r, true)} kg/semana).`;
+
+  if (r < -0.1) return {
+    head: 'Estás perdiendo peso 📉',
+    body: `<p>${rateTxt} Para ganar músculo necesitas superávit: estás comiendo por debajo de lo que gastas. Revisa que haces las 5 comidas y sube <b>+200 kcal</b> (≈ 50 g de arroz crudo o 1 plátano + 30 g de avena).${offTxt}</p>${partial}${btn(200)}`
+  };
+  if (r < BULK_MIN) {
+    const stalled = prev.rate !== null && prev.rate < BULK_MIN;
+    return stalled ? {
+      head: 'Estancado 2 semanas → subimos',
+      body: `<p>${rateTxt} Dos semanas seguidas por debajo de +${fmtKg(BULK_MIN)} kg: toca subir <b>+150 kcal</b>, casi todo en carbohidrato (≈ 40 g de arroz crudo o una tostada más).${offTxt}</p>${partial}${btn(150)}`
+    } : {
+      head: 'Por debajo del ritmo, vigilamos',
+      body: `<p>${rateTxt} Una semana floja puede ser agua o sal. Si la próxima semana tampoco sube de +${fmtKg(BULK_MIN)} kg, subiremos 150 kcal.${offTxt}</p>${partial}`
+    };
+  }
+  if (r > BULK_MAX) return {
+    head: 'Subiendo demasiado rápido',
+    body: `<p>${rateTxt} Por encima de +${fmtKg(BULK_MAX)} kg/semana gran parte es grasa. Bajamos <b>−150 kcal</b> (≈ 35 g menos de arroz crudo o sin la miel/frutos secos de media mañana).${offTxt}</p>${partial}${btn(-150)}`
+  };
+  return {
+    head: 'En el rango ideal ✅',
+    body: `<p>${rateTxt} Entre +${fmtKg(BULK_MIN)} y +${fmtKg(BULK_MAX)} kg/semana es un volumen limpio: ganas músculo sin acumular grasa de más. No toques nada.${offTxt}</p>${partial}`
+  };
+}
+
+function renderBodyChart(weeks) {
+  if (bodyLog.length < 2) return `<p class="avoid">Con 2 registros o más aparecerá aquí la gráfica de evolución.</p>`;
+  const W = BW_W, H = BW_H, pl = 34, pr = 10, pt = 12, pb = 24;
+  const t0 = parseLocalDate(bodyLog[0].date).getTime();
+  const t1 = Math.max(parseLocalDate(bodyLog[bodyLog.length-1].date).getTime(), t0 + DAY_MS);
+  const kgs = bodyLog.map(e => e.kg);
+  const lo = Math.floor(Math.min(...kgs) - 0.5), hi = Math.ceil(Math.max(...kgs) + 0.5);
+  const step = hi - lo <= 3 ? 0.5 : hi - lo <= 8 ? 1 : 2;
+  const x = t => pl + (t - t0) / (t1 - t0) * (W - pl - pr);
+  const y = kg => pt + (hi - kg) / (hi - lo) * (H - pt - pb);
+
+  let grid = '';
+  for (let v = lo; v <= hi + 1e-9; v += step) {
+    grid += `<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--border)" stroke-width="1"/>
+             <text x="${pl-6}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--text2)">${fmtKg(v)}</text>`;
+  }
+
+  // Weekly average plotted at mid-week (Thursday), clamped to the data range
+  const wkPts = weeks.map(w => {
+    const t = Math.min(Math.max(parseLocalDate(w.week).getTime() + 3*DAY_MS, t0), t1);
+    return { x: x(t), y: y(w.avg) };
+  });
+  const avgLine = wkPts.length > 1
+    ? `<polyline points="${wkPts.map(p => `${p.x},${p.y}`).join(' ')}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>` : '';
+  const avgDots = wkPts.map(p => `<circle cx="${p.x}" cy="${p.y}" r="4" fill="var(--accent)" stroke="var(--bg2)" stroke-width="2"/>`).join('');
+
+  bwPts = bodyLog.map(e => ({ x: x(parseLocalDate(e.date).getTime()), y: y(e.kg), e }));
+  const dots = bwPts.map(p => `<circle cx="${p.x}" cy="${p.y}" r="4" fill="var(--text2)" stroke="var(--bg2)" stroke-width="2"/>`).join('');
+
+  const xLbls = `<text x="${pl}" y="${H-6}" font-size="11" fill="var(--text2)">${fmtDay(bodyLog[0].date)}</text>
+                 <text x="${W-pr}" y="${H-6}" font-size="11" fill="var(--text2)" text-anchor="end">${fmtDay(bodyLog[bodyLog.length-1].date)}</text>`;
+
+  return `
+    <div class="chart-legend"><span><i class="lg-dot"></i>Pesaje diario</span><span><i class="lg-line"></i>Media semanal</span></div>
+    <div class="chart-wrap" id="bwChart">
+      <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Evolución del peso corporal">
+        ${grid}${xLbls}
+        <line id="bwCross" x1="0" x2="0" y1="${pt}" y2="${H-pb}" stroke="var(--text2)" stroke-width="1" stroke-dasharray="3 3" visibility="hidden"/>
+        ${dots}${avgLine}${avgDots}
+        <rect x="${pl}" y="0" width="${W-pl-pr}" height="${H}" fill="transparent"/>
+      </svg>
+      <div class="chart-tip" id="bwTip"></div>
+    </div>`;
+}
+
+function bindBodyChart() {
+  const wrap = document.getElementById('bwChart');
+  if (!wrap) return;
+  const svg = wrap.querySelector('svg'), tip = document.getElementById('bwTip'), cross = document.getElementById('bwCross');
+  const show = ev => {
+    const box = svg.getBoundingClientRect(), scale = box.width / BW_W;
+    const vx = (ev.clientX - box.left) / scale;
+    const p = bwPts.reduce((a, b) => Math.abs(b.x - vx) < Math.abs(a.x - vx) ? b : a);
+    cross.setAttribute('x1', p.x); cross.setAttribute('x2', p.x); cross.setAttribute('visibility', 'visible');
+    tip.innerHTML = `<b>${fmtKg(p.e.kg)} kg</b> · ${fmtDay(p.e.date)}${p.e.note ? ' · ' + escapeHtml(p.e.note) : ''}`;
+    tip.style.left = Math.min(Math.max(p.x * scale, 70), box.width - 70) + 'px';
+    tip.style.top = p.y * scale + 'px';
+    tip.style.display = 'block';
+  };
+  const hide = () => { tip.style.display = 'none'; cross.setAttribute('visibility', 'hidden'); };
+  svg.addEventListener('pointermove', show);
+  svg.addEventListener('pointerdown', show);
+  svg.addEventListener('pointerleave', hide);
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+
+function renderBody() {
+  const weeks = weeklyAverages();
+  const last = bodyLog[bodyLog.length-1];
+  const first = bodyLog[0];
+  const thisWeek = weeks.find(w => w.week === currentWeekKey);
+  const lastWeek = weeks[weeks.length-1];
+  const advice = bulkAdvice(weeks);
+
+  const stats = last ? `
+    <div class="card">
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-lbl">Último</div><div class="stat-val">${fmtKg(last.kg)} kg</div><div class="stat-sub">${fmtDay(last.date)}</div></div>
+        <div class="stat"><div class="stat-lbl">Media esta semana</div><div class="stat-val">${thisWeek ? fmtKg(thisWeek.avg) + ' kg' : '—'}</div><div class="stat-sub">${thisWeek ? thisWeek.n + ' pesaje' + (thisWeek.n > 1 ? 's' : '') : 'sin registros'}</div></div>
+        <div class="stat"><div class="stat-lbl">Ritmo semanal</div><div class="stat-val ${lastWeek && lastWeek.rate !== null ? trendCls(lastWeek.rate) : ''}">${lastWeek && lastWeek.rate !== null ? fmtKg(lastWeek.rate, true) + ' kg' : '—'}</div><div class="stat-sub">objetivo +${fmtKg(BULK_MIN)} a +${fmtKg(BULK_MAX)}</div></div>
+        <div class="stat"><div class="stat-lbl">Desde el inicio</div><div class="stat-val ${trendCls(last.kg - first.kg)}">${fmtKg(last.kg - first.kg, true)} kg</div><div class="stat-sub">desde ${fmtDay(first.date)}</div></div>
+      </div>
+    </div>` : '';
+
+  const weekRows = weeks.slice(-6).reverse().map(w => `
+    <div class="wk-row">
+      <span class="wk-d">${fmtWeekRange(w.week)}</span>
+      <span>${fmtKg(w.avg)} kg <span class="${w.rate === null ? 'flat' : trendCls(w.rate)}">${w.rate === null ? '' : '(' + fmtKg(w.rate, true) + ')'}</span></span>
+    </div>`).join('');
+
+  const entries = bodyLog.slice(-10).reverse().map(e => `
+    <div class="bw-item">
+      <span class="bw-d">${fmtDay(e.date)}</span>
+      <span class="bw-kg">${fmtKg(e.kg)} kg</span>
+      <span class="bw-n">${e.note ? escapeHtml(e.note) : ''}</span>
+      <button class="bw-del" onclick="deleteBody('${e.date}')" aria-label="Borrar">✕</button>
+    </div>`).join('');
+
+  document.getElementById('content').innerHTML = `
+    <div class="hist-intro">
+      <h2>Peso corporal</h2>
+      <p>Objetivo: volumen limpio. Me importa la tendencia de la media semanal, no el número de un día.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Registrar pesaje</div>
+      <div class="bw-form">
+        <input class="in-kg" type="number" step="0.1" min="30" max="200" id="bwKg" placeholder="${last ? fmtKg(last.kg).replace(',', '.') : '68.0'}" inputmode="decimal">
+        <input class="in-date" type="date" id="bwDate" value="${dateKey(new Date())}" max="${dateKey(new Date())}">
+        <input class="in-note" type="text" id="bwNote" placeholder="nota (opcional)">
+        <button class="btn-save" onclick="saveBody()">Guardar ✓</button>
+      </div>
+      <div class="bw-hint">En ayunas, después del baño. Si ya hay un pesaje ese día, se reemplaza.</div>
+    </div>
+    <div class="card coach">
+      <div class="coach-head">🧑‍🏫 ${advice.head}</div>
+      ${advice.body}
+    </div>
+    ${stats}
+    ${bodyLog.length ? `<div class="card"><div class="card-title">Evolución</div>${renderBodyChart(weeks)}</div>` : ''}
+    ${weeks.length ? `<div class="card"><div class="card-title">Medias semanales</div>${weekRows}</div>` : ''}
+    ${bodyLog.length ? `<div class="card"><div class="card-title">Últimos pesajes</div><div class="bw-list">${entries}</div></div>` : ''}
+  `;
+  bindBodyChart();
+}
+
+function saveBody() {
+  const kgEl = document.getElementById('bwKg');
+  const kg = parseFloat(kgEl.value);
+  const date = document.getElementById('bwDate').value || dateKey(new Date());
+  if (!kg || kg < 30 || kg > 200) { kgEl.focus(); return; }
+  const note = document.getElementById('bwNote').value.trim();
+  bodyLog = bodyLog.filter(e => e.date !== date);
+  bodyLog.push({ date, kg: Math.round(kg * 10) / 10, note });
+  bodyLog.sort((a, b) => a.date.localeCompare(b.date));
+  saveData();
+  render();
+}
+
+function deleteBody(date) {
+  if (!confirm(`¿Borrar el pesaje del ${fmtDay(date)}?`)) return;
+  bodyLog = bodyLog.filter(e => e.date !== date);
+  saveData();
+  render();
+}
+
+function applyKcal(delta) {
+  nutrition.kcalOffset += delta;
+  nutrition.lastAdjustWeek = currentWeekKey;
+  saveData();
+  render();
+}
+
+// ─── FOOD VIEW ────────────────────────────────────────────────────────
+function renderFood() {
+  document.getElementById('content').innerHTML = `<div class="hist-empty">Plan de alimentación en preparación 🍽️</div>`;
 }
 
 // ─── RENDER ───────────────────────────────────────────────────────────
